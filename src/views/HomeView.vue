@@ -3,7 +3,7 @@
     <img alt="Vue logo" src="../assets/logo.png" />
     <HelloWorld msg="インストールボタンサンプル" />
     <!-- インストールボタン -->
-    <button id="btn">install</button>
+    <button id="btn">インストール</button>
   </div>
 </template>
 

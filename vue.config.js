@@ -6,7 +6,7 @@ module.exports = {
     appleMobileWebAppStatusBarStyle: 'black',
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
-      swSrc: './src/service-worker.js', // サービスワーカーの登録を行うファイルを指定
+      swSrc: './public/service-worker.js', // サービスワーカーの登録を行うファイルを指定
     }
   },
   

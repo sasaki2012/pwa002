@@ -13,3 +13,13 @@ if (workbox) {
 
 // __WB_MANIFEST を使ってキャッシュ対象を指定
 workbox.precaching.precacheAndRoute(self.__WB_MANIFEST || []);
+
+self.addEventListener(
+  "notificationclick",
+  function (event) {
+    event.notification.close();
+    const url = event.notification.data.url || "/";
+    clients.openWindow(url);
+  },
+  false
+);

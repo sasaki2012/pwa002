@@ -30,16 +30,21 @@ export default {
           .catch((error) => console.log("error", error));
       }
     });
-
     // 通知の送信
     document.getElementById("send").addEventListener("click", () => {
       if (Notification.permission === "granted") {
-        console.log(navigator.serviceWorker);
-        navigator.serviceWorker.ready.then((registration) => {
-          console.log("Service Worker ready", registration);
-          // メッセージをService Workerに送信
-          registration.active.postMessage("プッシュ通知を確認しました。");
-        });
+        navigator.serviceWorker
+          .register("./service-worker.js")
+          .then((registration) => {
+            const options = {
+              body: "プッシュ通知の本文",
+              icon: "./img/icons/msapplication-icon-144x144.png",
+              data: {
+                url: "https://www.mitsue.co.jp/knowledge/blog/frontend/201908/23_1525.html",
+              },
+            };
+            registration.showNotification("プッシュ通知のタイトル", options);
+          });
       } else {
         alert("通知の許可が必要です");
       }

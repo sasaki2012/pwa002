@@ -1,4 +1,19 @@
-const { defineConfig } = require('@vue/cli-service')
-module.exports = defineConfig({
-  transpileDependencies: true
-})
+// const { defineConfig } = require('@vue/cli-service')
+// module.exports = defineConfig({
+//   transpileDependencies: true
+// })
+
+module.exports = {
+  pwa: {
+    name: 'My Application',
+    themeColor: '#4169E1',
+    appleMobileWebAppCapable: 'yes',
+    appleMobileWebAppStatusBarStyle: 'black',
+    workboxPluginMode: 'InjectManifest',
+    workboxOptions: {
+      swSrc: './src/service-worker.js', // サービスワーカーの登録を行うファイルを指定
+      swDest: 'service-worker.js'
+    }
+  },
+  
+}

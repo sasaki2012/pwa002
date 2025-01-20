@@ -28,7 +28,7 @@ export default {
     };
 
     // Initialize Firebase
-    initializeApp(firebaseConfig);
+    const app = initializeApp(firebaseConfig);
 
     // Request notification permission and fetch token
     const requestNotificationPermission = () => {
@@ -37,7 +37,7 @@ export default {
       } else if (Notification.permission !== "denied") {
         Notification.requestPermission().then((permission) => {
           console.log(permission);
-          const messaging = getMessaging();
+          const messaging = getMessaging(app);
           getToken(messaging, {
             vapidKey:
               "BOdwVfQbieXMwPlWEc7pBYDu9chE4gQOVhmaqo15PNk6UQEr1uJ7MAm7agdMUfRmAdlTJ2rKzLu7t9cBAxzpz6M",

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+<!-- 
+
+    <button id="allow_push_notification">トークン取得です</button>
+    <p id="output"></p>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyA-kpaHoCYnE7bNNGuLlNtikTKkwt97Sz4",
+          authDomain: "push-notification-sample-cc5b4.firebaseapp.com",
+          projectId: "push-notification-sample-cc5b4",
+          storageBucket: "push-notification-sample-cc5b4.firebasestorage.app",
+          messagingSenderId: "689806237170",
+          appId: "1:689806237170:web:c294dbfe6a5d2345989f6b",
+          measurementId: "G-604YNM1BW7"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // 通知を許可するボタンが押された時のアクション
+        const btn = document.getElementById('allow_push_notification');
+        btn.addEventListener("click", function () {
+            //let promise = Notification.requestPermission();
+            //console.log("promise: ",promise);
+            if (!("Notification" in window)) {
+                // ブラウザーが通知に対応しているか調べる
+                alert("このブラウザーはデスクトップ通知には対応していません。");
+            } else if (Notification.permission !== "denied") {
+
+            //if(Notification.permission !== "denied") {
+                Notification.requestPermission().then((permission) => {
+                    const messaging = getMessaging();
+                    // Add the public key generated from the console here.
+                    getToken(messaging, {vapidKey: "BOdwVfQbieXMwPlWEc7pBYDu9chE4gQOVhmaqo15PNk6UQEr1uJ7MAm7agdMUfRmAdlTJ2rKzLu7t9cBAxzpz6M"})
+                        .then((token) => {
+                            if (token) {
+                                // tokenを出力
+                                //document.getElementById('output').textContent = `${token.Promise}`;
+                                console.log( "token", token);
+                                document.getElementById('output').textContent = token;
+                            }else{
+                                console.log('登録トークンがありません。生成する許可をリクエストします。');
+                            }
+                        })
+                        .catch((err) => {
+                            console.log('getToken Error',err);
+                        });
+                });
+            }
+        });
+    </script> -->
+  </body>
+</html>
+
+<!-- <script>
+  window.addEventListener('load', function() {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register("/service-worker.js")
+        .then(function(registration) {
+          console.log("serviceWorker registed.");
+        }).catch(function(error) {
+          console.warn("serviceWorker error.", error);
+        });
+    }
+  });
+  </script> -->

@@ -96,7 +96,7 @@ export default {
 
           // トークンを取得
           const token = await getToken(messaging, {
-            vapidKey: "YOUR_VAPID_KEY"
+            vapidKey: "BOdwVfQbieXMwPlWEc7pBYDu9chE4gQOVhmaqo15PNk6UQEr1uJ7MAm7agdMUfRmAdlTJ2rKzLu7t9cBAxzpz6M"
           });
           console.log("FCM Token:", token);
 

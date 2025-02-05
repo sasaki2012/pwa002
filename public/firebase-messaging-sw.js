@@ -1,38 +1,28 @@
 importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js');
 
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    fetch('/firebaseConfig.json')
-      .then((response) => response.json())
-      .then((config) => {
-        firebase.initializeApp(config);
-        console.log('Firebase initialized with config:', config);
-      })
-      .catch((error) => console.error('Failed to load firebaseConfig.json:', error))
-  );
+// Firebase の設定情報をここに記述
+firebase.initializeApp({
+  apiKey: "AIzaSyA-kpaHoCYnE7bNNGuLlNtikTKkwt97Sz4",
+  authDomain: "push-notification-sample-cc5b4.firebaseapp.com",
+  projectId: "push-notification-sample-cc5b4",
+  storageBucket: "push-notification-sample-cc5b4.firebasestorage.app",
+  messagingSenderId: "689806237170",
+  appId: "1:689806237170:web:c294dbfe6a5d2345989f6b",
+  measurementId: "G-604YNM1BW7",
 });
 
-// Firebase Messaging の初期化
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    fetch('/firebaseConfig.json')
-      .then((response) => response.json())
-      .then((config) => {
-        firebase.initializeApp(config);
-        console.log('Firebase re-initialized with config:', config);
-      })
-      .catch((error) => console.error('Failed to reload firebaseConfig.json:', error))
-  );
-});
+// Messaging を初期化
 const messaging = firebase.messaging();
 
 // Push 通知イベント
 self.addEventListener('push', function (event) {
-  var data = event.data ? event.data.json() : {};
-  var title = data.notification?.title || 'Push Notification';
-  var message = data.notification?.body || 'You have a new message';
-
+  var data = {};
+  if (event.data) {
+    data = event.data.json();
+  }
+  var title = data.notification.title;
+  var message = data.notification.body;
   event.waitUntil(
     self.registration.showNotification(title, {
       body: message

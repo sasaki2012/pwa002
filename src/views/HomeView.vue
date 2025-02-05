@@ -26,8 +26,10 @@ export default {
     this.requestNotificationPermission();
   },
   methods: {
-    requestNotificationPermission() {
+    // プッシュ通知許可処理
+    async requestNotificationPermission() {
       if ("serviceWorker" in navigator) {
+        // serviceWorkerの登録
         navigator.serviceWorker
           .register("/service-worker.js")
           .then(() => {
@@ -37,49 +39,54 @@ export default {
             console.warn("Service worker error.", error);
           });
 
+        // ブラウザが非対応の場合はトークン処理を実行しない
         if (!("Notification" in window)) {
-          alert("このブラウザは通知に対応していません。");
+          console.log("ブラウザが非対応の場合はトークン処理を実行しない");
           return;
         }
 
-        // すでに許可されている場合は `getFCMToken()` を実行しない
+        // 通知許可されている場合はトークン処理を実行しない
         if (localStorage.getItem("pushNotificationGranted") === "true") {
-          console.log("プッシュ通知はすでに許可されています。トークン取得をスキップします。");
+          console.log("通知許可されている場合はトークン処理を実行しない");
           return;
         }
 
+        // トークン取得、DB登録処理
         Notification.requestPermission().then((permission) => {
           if (permission === "granted") {
             // 許可されたらローカルストレージに保存
-            localStorage.setItem("pushNotificationGranted", "true");
-            this.getFCMToken();
+            this.getFCMToken().then((token) => {
+              if (token) {
+                localStorage.setItem("pushNotificationGranted", "true");
+                console.log("取得したtoken", token);
+              }
+            });
           } else {
             console.log("通知の許可が拒否されました。");
           }
         });
       }
     },
-    getFCMToken() {
+    // FCMトークン取得処理
+    async getFCMToken() {
       // Firebase 初期化
       const app = initializeApp(firebaseConfig);
       const messaging = getMessaging(app);
-
-      // FCM トークン取得
-      getToken(messaging, { 
-        vapidKey: firebaseConfig.vapidKey
-      })
-        .then((currentToken) => {
-          if (currentToken) {
-            console.log("FCMトークン:", currentToken);
-            this.token = currentToken;
-          } else {
-            console.log("登録トークンがありません。許可をリクエストしてください。");
-          }
-        })
-        .catch((err) => {
-          console.error("トークン取得エラー:", err);
+      try {
+         // FCM トークン取得
+        const currentToken = await getToken(messaging, { 
+          vapidKey: firebaseConfig.vapidKey
         });
-    }
+        if (currentToken) {
+          return currentToken;
+        } else {
+          return null;
+        }
+      } catch (err) {
+        console.error("トークン取得エラー:", err);
+        return null;
+      }
+    },
   },
 }
 </script>

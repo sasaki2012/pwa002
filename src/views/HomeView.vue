@@ -25,6 +25,16 @@ export default {
   },
   methods: {
     requestNotificationPermission() {
+      if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/service-worker.js")
+        .then(() => {
+          console.log("Service worker registered.");
+        })
+        .catch((error) => {
+          console.warn("Service worker error.", error);
+        });
+
       if (!("Notification" in window)) {
         alert("このブラウザは通知に対応していません。");
         return;
@@ -37,9 +47,11 @@ export default {
           console.log("通知の許可が拒否されました。");
         }
       });
+
+      
+    }
     },
     getFCMToken() {
-      
       const firebaseConfig = {
         apiKey: "AIzaSyA-kpaHoCYnE7bNNGuLlNtikTKkwt97Sz4",
         authDomain: "push-notification-sample-cc5b4.firebaseapp.com",

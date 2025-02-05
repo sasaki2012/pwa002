@@ -9,7 +9,6 @@
 import HelloWorld from '@/components/HelloWorld.vue'
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
-import { firebaseConfig } from "@/config/firebaseConfig";
 
 
 export default {
@@ -19,13 +18,26 @@ export default {
   },
   data() {
     return {
-      token: ""
+      firebaseConfig: null,
     };
   },
-  mounted() {
-    this.requestNotificationPermission();
+  async mounted() {
+    await this.loadFirebaseConfig();
+    if (this.firebaseConfig) {
+      this.requestNotificationPermission();
+    }
   },
   methods: {
+    // Firebase 設定をJSONから取得
+    async loadFirebaseConfig() {
+      try {
+        const response = await fetch("/firebaseConfig.json");
+        this.firebaseConfig = await response.json();
+        console.log("Firebase設定取得:", this.firebaseConfig);
+      } catch (error) {
+        console.error("Firebase設定の取得に失敗:", error);
+      }
+    },
     // プッシュ通知許可処理
     async requestNotificationPermission() {
       if ("serviceWorker" in navigator) {
@@ -70,12 +82,17 @@ export default {
     // FCMトークン取得処理
     async getFCMToken() {
       // Firebase 初期化あa
-      const app = initializeApp(firebaseConfig);
+      if (!this.firebaseConfig) {
+        console.error("Firebase 設定が取得できていません");
+        return null;
+      }
+
+      const app = initializeApp(this.firebaseConfig);
       const messaging = getMessaging(app);
       try {
          // FCM トークン取得
         const currentToken = await getToken(messaging, { 
-          vapidKey: firebaseConfig.vapidKey
+          vapidKey: this.firebaseConfig.vapidKey
         });
         if (currentToken) {
           return currentToken;

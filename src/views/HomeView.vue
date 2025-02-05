@@ -7,58 +7,69 @@
 
 <script>
 import HelloWorld from '@/components/HelloWorld.vue'
-import { messaging, getToken, onMessage } from "@/firebase";
+import { initializeApp } from "firebase/app";
+import { getMessaging, getToken } from "firebase/messaging";
 
 export default {
   name: 'HomeView',
   components: {
     HelloWorld
   },
-  methods: {
-    async requestPermission() {
-      try {
-        // 通知の許可をリクエスト
-        const status = await Notification.requestPermission();
-        if (status === "granted") {
-          console.log("Notification permission granted.");
-
-          // トークンを取得
-          const token = await getToken(messaging, {
-            vapidKey: "BOdwVfQbieXMwPlWEc7pBYDu9chE4gQOVhmaqo15PNk6UQEr1uJ7MAm7agdMUfRmAdlTJ2rKzLu7t9cBAxzpz6M"
-          });
-          console.log("FCM Token:", token);
-
-          // サーバーにトークンを送信して登録するなどの処理を実行
-        } else {
-          console.warn("Notification permission denied.");
-        }
-      } catch (error) {
-        console.error("Error getting notification permission:", error);
-      }
-    },
+  data() {
+    return {
+      token: ""
+    };
   },
   mounted() {
+    this.requestNotificationPermission();
+  },
+  methods: {
+    requestNotificationPermission() {
+      if (!("Notification" in window)) {
+        alert("このブラウザは通知に対応していません。");
+        return;
+      }
 
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/service-worker.js")
-        .then(() => {
-          console.log("Service worker registered.");
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          this.getFCMToken();
+        } else {
+          console.log("通知の許可が拒否されました。");
+        }
+      });
+    },
+    getFCMToken() {
+      
+      const firebaseConfig = {
+        apiKey: "AIzaSyA-kpaHoCYnE7bNNGuLlNtikTKkwt97Sz4",
+        authDomain: "push-notification-sample-cc5b4.firebaseapp.com",
+        projectId: "push-notification-sample-cc5b4",
+        storageBucket: "push-notification-sample-cc5b4.firebasestorage.app",
+        messagingSenderId: "689806237170",
+        appId: "1:689806237170:web:c294dbfe6a5d2345989f6b",
+        measurementId: "G-604YNM1BW7",
+      };
+
+      // Firebase 初期化
+      const app = initializeApp(firebaseConfig);
+      const messaging = getMessaging(app);
+
+      // FCM トークン取得
+      getToken(messaging, { 
+        vapidKey: "BOdwVfQbieXMwPlWEc7pBYDu9chE4gQOVhmaqo15PNk6UQEr1uJ7MAm7agdMUfRmAdlTJ2rKzLu7t9cBAxzpz6M"
+      })
+        .then((currentToken) => {
+          if (currentToken) {
+            console.log("FCMトークン:", currentToken);
+            this.token = currentToken;
+          } else {
+            console.log("登録トークンがありません。許可をリクエストしてください。");
+          }
         })
-        .catch((error) => {
-          console.warn("Service worker error.", error);
+        .catch((err) => {
+          console.error("トークン取得エラー:", err);
         });
     }
-
-    this.requestPermission();
-    onMessage(messaging, (payload) => {
-      console.log("Message received:", payload);
-      const title = payload.notification.title;
-      const options = {
-        body: payload.notification.body,
-      };
-      new Notification(title, options);
-    });
   },
 }
 </script>

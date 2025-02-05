@@ -79,7 +79,7 @@ export default {
         });
       }
     },
-    // FCMトークン取得処理
+    // FCMトークン取得処理あ
     async getFCMToken() {
       // Firebase 初期化あa
       if (!this.firebaseConfig) {

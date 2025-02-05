@@ -69,7 +69,7 @@ export default {
     },
     // FCMトークン取得処理
     async getFCMToken() {
-      // Firebase 初期化
+      // Firebase 初期化あ
       const app = initializeApp(firebaseConfig);
       const messaging = getMessaging(app);
       try {
